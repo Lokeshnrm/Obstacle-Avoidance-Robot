@@ -1,0 +1,109 @@
+The following code represents the embedded C program of the obstacle avoidance robot
+#include <Servo.h>
+
+// Define motor pins
+const int leftMotorPin = 5;
+const int rightMotorPin = 6;
+
+// Define ultrasonic sensor pins
+const int trigPin = 9;
+const int echoPin = 10;
+
+// Define distance threshold for obstacle avoidance
+const int obstacleThreshold = 20; // in centimeters
+
+// Initialize servo motors
+Servo leftMotor;
+Servo rightMotor;
+
+void setup() {
+  // Initialize motor pins
+  pinMode(leftMotorPin, OUTPUT);
+  pinMode(rightMotorPin, OUTPUT);
+
+  // Initialize ultrasonic sensor pins
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  // Attach servo motors
+  leftMotor.attach(leftMotorPin);
+  rightMotor.attach(rightMotorPin);
+}
+
+void loop() {
+  // Measure distance from obstacle
+  int distance = getDistance();
+
+  // Obstacle avoidance logic
+  if (distance < obstacleThreshold) {
+    // If obstacle is too close, turn right
+    leftMotor.write(90);
+    rightMotor.write(180);
+  } else {
+    // Move forward
+    leftMotor.write(180);
+    rightMotor.write(180);
+  }
+}
+
+int getDistance() {
+  // Ultrasonic sensor logic to measure distance
+  // Implement your specific sensor logic here
+}
+
+The following code represents the embedded C program for obstacle avoidance robot for Infrared Radiation Sensor
+#include <Servo.h>
+
+// Define motor pins
+const int leftMotorPin = 5;
+const int rightMotorPin = 6;
+
+// Define IR sensor pins
+const int leftIRPin = 9;
+const int rightIRPin = 10;
+
+// Define distance threshold for obstacle avoidance
+const int obstacleThreshold = 500; // Analog reading threshold
+
+// Initialize servo motors
+Servo leftMotor;
+Servo rightMotor;
+
+void setup() {
+  // Initialize motor pins
+  pinMode(leftMotorPin, OUTPUT);
+  pinMode(rightMotorPin, OUTPUT);
+
+  // Initialize IR sensor pins
+  pinMode(leftIRPin, INPUT);
+  pinMode(rightIRPin, INPUT);
+
+  // Attach servo motors
+  leftMotor.attach(leftMotorPin);
+  rightMotor.attach(rightMotorPin);
+}
+
+void loop() {
+  // Read IR sensor values
+  int leftIRValue = analogRead(leftIRPin);
+  int rightIRValue = analogRead(rightIRPin);
+
+  // Obstacle avoidance logic
+  if (leftIRValue > obstacleThreshold && rightIRValue > obstacleThreshold) {
+    // No obstacle, move forward
+    leftMotor.write(180);
+    rightMotor.write(180);
+  } else if (leftIRValue <= obstacleThreshold && rightIRValue > obstacleThreshold) {
+    // Obstacle on the left, turn right
+    leftMotor.write(180);
+    rightMotor.write(90);
+  } else if (leftIRValue > obstacleThreshold && rightIRValue <= obstacleThreshold) {
+    // Obstacle on the right, turn left
+    leftMotor.write(90);
+    rightMotor.write(180);
+  } else {
+    // Obstacles on both sides, stop
+    leftMotor.write(90);
+    rightMotor.write(90);
+  }
+}
